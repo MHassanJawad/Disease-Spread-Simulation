@@ -20,6 +20,7 @@ with st.sidebar:
     quarantine_pct = st.slider("Quarantine %", 0.0, 1.0, 0.0)
     distancing_strength = st.slider("Social Distancing", 0.0, 1.0, 0.0)
     step_delay = st.slider("Step Delay (seconds)", 0.1, 2.0, 0.5)
+    show_edges = st.checkbox("Show Network Edges", value=True)
 
 # Session state initialization
 if "G" not in st.session_state:
@@ -82,7 +83,10 @@ def update_visualization():
     nx.draw(
         st.session_state.G, pos,
         node_color=get_node_colors(st.session_state.states),
-        node_size=20, ax=ax, with_labels=False
+        node_size=20, 
+        ax=ax, 
+        with_labels=False,
+        edge_color='gray' if show_edges else 'none'  # Hide edges if show_edges is False
     )
     graph_placeholder.pyplot(fig)
     plt.close(fig)  # Close the figure to prevent memory leaks
@@ -120,7 +124,6 @@ if st.session_state.next_step:
         update_visualization()
         time.sleep(step_delay)  # Add small delay for consistency
         st.session_state.next_step = False
-        st.rerun()  # Use same rerun pattern as auto simulation
     else:
         st.session_state.next_step = False
 
