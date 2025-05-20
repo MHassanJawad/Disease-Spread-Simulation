@@ -149,8 +149,8 @@ def create_network_visualization(states, pos):
     return fig
 
 def update_visualization():
-    # Update visualization in the same placeholder
-    pos = nx.spring_layout(st.session_state.G, seed=42)
+    # Use cached layout for speed
+    pos = st.session_state.pos
     fig, ax = plt.subplots(figsize=(8, 6))
     nx.draw(
         st.session_state.G, pos,
@@ -226,7 +226,7 @@ if st.session_state.auto_sim:
         )
         update_stats(st.session_state.states, st.session_state.stats)
         update_visualization()
-        time.sleep(step_delay)
+        time.sleep(max(step_delay, 0.2))  # Enforce a minimum delay of 0.2 seconds
     
     st.session_state.auto_sim = False
     st.rerun()
